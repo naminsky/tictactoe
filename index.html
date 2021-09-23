@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="content">
+        <div id="header"></div>
+            <div id="title">
+                <h1>Tic-Tac-Toe</h1>
+            </div>
+            <div id="message">
+                <p></p>
+            </div>
+            <div id="button"></div>
+        <div id="board">
+            <div id="cell-0"></div>
+            <div id="cell-1"></div>
+            <div id="cell-2"></div>
+            <div id="cell-3"></div>
+            <div id="cell-4"></div>
+            <div id="cell-5"></div>
+            <div id="cell-6"></div>
+            <div id="cell-7"></div>
+            <div id="cell-8"></div>
+        </div>
+    </div>
+    <script type="module">
+        import { TicTacToe } from "./game.js"
+        const cells_count = 9
+        const tic = new TicTacToe
+        const message = document.getElementById("message")
+        const button = document.getElementById("button")
+        const board = document.getElementById("board")
+
+        for (let i = 0; i < cells_count; i++) {
+            const cell = document.getElementById("cell-" + i)
+            console.log(cell)
+
+            cell.addEventListener("click", event => {
+                console.log(event)
+                const cell = event.currentTarget
+                if (cell.classList.contains("cross") || cell.classList.contains("nought")) {
+                    return
+                }
+
+                if (tic.isCrossTurn) {
+                    cell.classList.add("cross")
+                    tic.changeState(cell.id.replace("cell-", ""))
+                } else {
+                    cell.classList.add("nought")
+                    tic.changeState(cell.id.replace("cell-", ""))
+                }
+
+                if (tic.winner === "cross") {
+                    console.log("cross win")
+                    message.innerHTML = '<p>"x" player win!!</p>'
+                } else if (tic.winner === "nought") {
+                    console.log("nought win")
+                    message.innerHTML = '<p>"o" player win!!</p>'
+                } else {
+                    // continue
+                }
+
+                tic.changeTurn()
+                return
+            })
+        }
+    </script>
+</body>
+</html>
