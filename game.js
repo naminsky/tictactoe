@@ -12,7 +12,22 @@ export class TicTacToe {
         this.over = false
         this.winner = ""
     }
-    
+
+    printBoard() {
+        // for debug
+        let board = this.states.slice()
+        board = board.map(cell => cell.replace("cross", "x"))
+        board = board.map(cell => cell.replace("nought", "o"))
+        console.log("-----")
+        console.log(board.slice(0, 3).join("|"))
+        console.log("-----")
+        console.log(board.slice(3, 6).join("|"))
+        console.log("-----")
+        console.log(board.slice(6, 9).join("|"))
+        console.log("-----")
+        return
+    }
+
     changeState(cell_id) {
         this.states[cell_id] = this.active_turn
 
@@ -51,7 +66,7 @@ export class TicTacToe {
         }
     
         if (this.over === false && this.available_moves.toString() === [].toString()) {
-            console.log("draw")
+            // console.log("draw")
             this.over = true
         }
         return
@@ -78,9 +93,9 @@ export class TicTacToe {
     }
 }
 
-export class CPU {
+export class Player {
     constructor() {
-        let choice = 0
+        this.choice = 0
     }
 
     score(game) {
@@ -103,6 +118,7 @@ export class CPU {
 
         for (const move of game.available_moves) {
             const possible_game = new TicTacToe
+            possible_game.states = game.states.slice()
             possible_game.changeState(move)
             scores.push(this.minimax(possible_game))
             moves.push(move)
@@ -111,14 +127,14 @@ export class CPU {
         if (game.active_turn === "cross") {
             // max calculation
             const max_score = Math.max(...scores)
-            const max_score_index = scores.findIndex(score => score === max_score)
-            choice = moves[max_score_index];
+            const max_score_index = scores.indexOf(max_score)
+            this.choice = moves[max_score_index];
             return max_score
         } else {
             // min calculation
             const min_score = Math.min(...scores)
-            const min_score_index = scores.findIndex(score => score === min_score)
-            choice = moves[min_score_index];
+            const min_score_index = scores.indexOf(min_score)
+            this.choice = moves[min_score_index];
             return min_score
         }
     }

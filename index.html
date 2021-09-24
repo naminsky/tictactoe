@@ -30,12 +30,27 @@
         </div>
     </div>
     <script type="module">
-        import { TicTacToe } from "./game.js"
+        import { TicTacToe, Player } from "./game.js"
         const cells_count = 9
         const game = new TicTacToe
+        const player = new Player
         const message = document.getElementById("message")
         const button = document.getElementById("button")
         const board = document.getElementById("board")
+
+        const judge = () => {
+            if (game.winner === "cross") {
+                console.log("cross win")
+                message.innerHTML = '<p>"x" player win!!</p>'
+            } else if (game.winner === "nought") {
+                console.log("nought win")
+                message.innerHTML = '<p>"o" player win!!</p>'
+            } else if (game.over) {
+                // No one is a winner and there is nowhere to go.
+                console.log("draw")
+                message.innerHTML = '<p>draw...</p>'
+            }
+        }
 
         for (let i = 0; i < cells_count; i++) {
             const cell = document.getElementById("cell-" + i)
@@ -55,17 +70,14 @@
                 cell.classList.add(game.active_turn)
                 game.changeState(cell.id.replace("cell-", ""))
 
-                if (game.winner === "cross") {
-                    console.log("cross win")
-                    message.innerHTML = '<p>"x" player win!!</p>'
-                } else if (game.winner === "nought") {
-                    console.log("nought win")
-                    message.innerHTML = '<p>"o" player win!!</p>'
-                } else if (game.over) {
-                    // No one is a winner and there is nowhere to go.
-                    console.log("draw")
-                    message.innerHTML = '<p>draw...</p>'
-                }
+                judge()
+
+                player.minimax(game)
+                const player_cell = document.getElementById("cell-" + player.choice)
+                player_cell.classList.add(game.active_turn)
+                game.changeState(player_cell.id.replace("cell-", ""))
+
+                judge()
 
                 return
             })
